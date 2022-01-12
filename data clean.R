@@ -4,22 +4,30 @@ champs <- read.csv("champs.csv")
 nba_champs <- champs %>% filter(Lg == 'NBA')
 write.csv(nba_champs, "filtered_nba_champs.csv", row.names = FALSE)
 
-wout_champ <- read.csv('nba_champs_train.csv')
 team_totals <- read.csv("Team Totals.csv")
-for(i in 1:75){
-  if(i==1){
-    wout_champ$champs <- 0
-  }
-  else{
-    if(wout_champ$season == 2022 - i){
-      
-    }
-  }
-}
 
-team_nba  <- wout_champ %>% filter(lg == 'NBA')
+# Filter out season before 1980
+team_nba  <- team_totals %>% filter(season>=1980)
+# Filter out stats that are too old and not in NBA
+team_nba  <- team_nba %>% filter(lg == 'NBA')
 
-for(i in 1:1134){
+# Join additional data from another csv provided
+team_sum <- read.csv("Team Summaries.csv")
+temp <- left_join(team_nba, team_sum, by=c("season", "team"))
+temp$wpct <- temp$w/(temp$w+temp$l)
+
+# Remove the rows League Vaerage
+avg_removed <- temp[temp$team!= "League Average",]
+
+# Now we want to split the data into current season and previous seasons
+
+# Filter out the stats that is running in the current season
+wout_champ <- avg_removed %>% filter(season!=2021)
+# Filter out the stats that is for the current season
+sea21 <- avg_removed %>% filter(season==2021)
+
+# Add whether a team is a champion for past seasons
+for(i in 1:dim(wout_champ)[1]){
   indx = 2021 - wout_champ$season[i]
   if(indx >0){
     if(nba_champs$Champion[indx] ==wout_champ$team[i]){
@@ -31,16 +39,5 @@ for(i in 1:1134){
   }
 }
 
-team_nba  <- team_totals %>% filter(season>=1980)
 write.csv(wout_champ, "nba_champs_comb1.csv", row.names = FALSE)
-sum(team_nba$champs)
-
-
-team_sum <- read.csv("Team Summaries.csv")
-temp <- left_join(team_nba, team_sum, by=c("season", "team"))
-
-temp$wpct <- temp$w/(temp$w+temp$l)
-write.csv(temp, "nba_champs_comb2.csv", row.names = FALSE)
-
-avg_removed <- temp[temp$team!= "League Average",]
-write.csv(avg_removed, "nba_champs_comb3.csv", row.names = FALSE)
+write.csv(sea21, "sea21.csv", row.names = FALSE)
