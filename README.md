@@ -4,3 +4,7 @@ It's another season of NBA, teams are soon to be locked in for playoffs and gett
 # How to Use This for Future Seasons
 Download the data files of Team Summaries and Team Totals from https://www.kaggle.com/sumitrodatta/nba-aba-baa-stats. The files on May 1st, 2021 are provided in the repository, you will need to replace them with the latest data.
 You will also need to retrieve a list of NBA champions from the past, champions up to season 2020 is provided as champs.csv. The data clean.R will filter out champions that are only listed in NBA league. 
+
+# Results for Season 2021
+See results of the deep learning method with TensorFlow: https://asasa.me/NBA-2021-Prediction/
+More information on the project on: https://asasa.me/projects/index.html
